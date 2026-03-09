@@ -25,24 +25,24 @@ class PlaceModel {
     required this.timestamp,
   });
 
-  // Convert Firestore Document to PlaceModel
+  // Factory to create a Place from Firestore Document
   factory PlaceModel.fromFirestore(DocumentSnapshot doc) {
-    Map data = doc.data() as Map<String, dynamic>;
+    Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
     return PlaceModel(
       id: doc.id,
       name: data['name'] ?? '',
-      category: data['category'] ?? 'Other',
+      category: data['category'] ?? 'Café',
       address: data['address'] ?? '',
       contact: data['contact'] ?? '',
       description: data['description'] ?? '',
       latitude: (data['latitude'] as num).toDouble(),
       longitude: (data['longitude'] as num).toDouble(),
       createdBy: data['createdBy'] ?? '',
-      timestamp: (data['timestamp'] as Timestamp).toDate(),
+      timestamp: (data['timestamp'] as Timestamp?)?.toDate() ?? DateTime.now(),
     );
   }
 
-  // Convert PlaceModel to Map for Firestore
+  // Convert to Map for saving to Firestore
   Map<String, dynamic> toMap() {
     return {
       'name': name,
