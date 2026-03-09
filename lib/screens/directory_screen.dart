@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/listings_provider.dart';
+import '../models/place_model.dart'; 
 import '../widgets/service_card.dart';
 
 class DirectoryScreen extends StatelessWidget {
@@ -8,41 +9,34 @@ class DirectoryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Using watch to rebuild when filters change
     final listingsProvider = context.watch<ListingsProvider>();
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('Kigali City', style: TextStyle(fontWeight: FontWeight.bold)),
-        elevation: 0,
-        backgroundColor: Colors.transparent,
-        foregroundColor: const Color(0xFF0D1B3E),
       ),
       body: Column(
         children: [
-          // Category Chips
+          // 1. Horizontal Category Chips
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Row(
-              children: ['All', 'Cafés', 'Pharmacies', 'Hospitals', 'Parks'].map((cat) {
-                final isSelected = listingsProvider.selectedCategory == cat;
+              children: ['All', 'Cafés', 'Pharmacies', 'Hospitals'].map((cat) {
                 return Padding(
                   padding: const EdgeInsets.only(right: 8),
                   child: ChoiceChip(
                     label: Text(cat),
-                    selected: isSelected,
-                    onSelected: (bool selected) {
-                      listingsProvider.setCategory(cat);
-                    },
-                    selectedColor: const Color(0xFF0D1B3E),
-                    labelStyle: TextStyle(color: isSelected ? Colors.white : Colors.black),
+                    selected: listingsProvider.selectedCategory == cat,
+                    onSelected: (selected) => listingsProvider.setCategory(cat),
                   ),
                 );
               }).toList(),
             ),
           ),
           
-          // Search Bar
+          // 2. Search Bar
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: TextField(
@@ -50,41 +44,32 @@ class DirectoryScreen extends StatelessWidget {
               decoration: InputDecoration(
                 hintText: 'Search for a service',
                 prefixIcon: const Icon(Icons.search),
-                filled: true,
-                fillColor: Colors.white,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide.none,
-                ),
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
               ),
             ),
           ),
 
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Text('Near You', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            ),
-          ),
-
-          // Real-time List
+          // 3. The List (Fixed the "Object" error by adding <List<PlaceModel>>)
           Expanded(
-            child: StreamBuilder(
+            child: StreamBuilder<List<PlaceModel>>(
               stream: listingsProvider.filteredListings,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
                 }
-                if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return const Center(child: Text('No listings found in Kigali.'));
+                
+                // Fixed: Check snapshot.data directly
+                final docs = snapshot.data ?? [];
+                
+                if (docs.isEmpty) {
+                  return const Center(child: Text('No results found in Kigali'));
                 }
 
                 return ListView.builder(
                   padding: const EdgeInsets.all(16),
-                  itemCount: snapshot.data!.length,
+                  itemCount: docs.length,
                   itemBuilder: (context, index) {
-                    return ServiceCard(place: snapshot.data![index]);
+                    return ServiceCard(place: docs[index]);
                   },
                 );
               },
