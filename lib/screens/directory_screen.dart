@@ -42,22 +42,26 @@ class DirectoryScreen extends StatelessWidget {
           ),
           
           // 2. Search Bar
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: TextField(
-              onChanged: (val) => listingsProvider.setSearchQuery(val),
-              decoration: InputDecoration(
-                hintText: 'Search for a service',
-                prefixIcon: const Icon(Icons.search),
-                filled: true,
-                fillColor: Colors.white,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide.none,
+            // Inside directory_screen.dart -> build method
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: TextField(
+                onChanged: (value) {
+                  // This sends the text to your provider in real-time
+                  context.read<ListingsProvider>().setSearchQuery(value);
+                },
+                decoration: InputDecoration(
+                  hintText: 'Search for shops, cafes...',
+                  prefixIcon: const Icon(Icons.search),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide.none,
+                  ),
+                  filled: true,
+                  fillColor: Colors.grey[200],
                 ),
               ),
             ),
-          ),
 
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),

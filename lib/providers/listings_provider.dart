@@ -5,6 +5,8 @@ import '../models/place_model.dart';
 class ListingsProvider with ChangeNotifier {
   final FirestoreService _service = FirestoreService();
   
+  
+
   bool _isLoading = false;
   String _searchQuery = "";
   String _selectedCategory = "All";
@@ -32,16 +34,19 @@ class ListingsProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> addPlace(PlaceModel place) async {
-    _isLoading = true;
-    notifyListeners();
-    try {
-      await _service.addPlace(place);
-    } finally {
-      _isLoading = false;
-      notifyListeners();
-    }
+// lib/providers/listings_provider.dart
+Future<void> addPlace(PlaceModel place) async {
+  _isLoading = true;
+  notifyListeners(); // This disables the button
+  try {
+    await _service.addPlace(place);
+  } catch (e) {
+    print("Error saving: $e");
+  } finally {
+    _isLoading = false;
+    notifyListeners(); // This re-enables the button!
   }
+}
 
   // ADD THIS METHOD TO FIX THE ERROR IN MY_LISTINGS_SCREEN
   Future<void> deletePlace(String id) async {

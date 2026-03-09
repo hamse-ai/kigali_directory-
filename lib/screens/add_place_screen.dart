@@ -15,65 +15,85 @@ class _AddPlaceScreenState extends State<AddPlaceScreen> {
   final _formKey = GlobalKey<FormState>();
   String _name = '';
   String _category = 'Café';
-  String _address = '';
+  String _address = ''; // Correctly initialized
   String _description = '';
-  final double _lat = -1.9441; // Default Kigali Lat
-  final double _lng = 30.0619; // Default Kigali Lng
 
   void _save() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
       
+      final provider = context.read<ListingsProvider>();
+      final user = FirebaseAuth.instance.currentUser;
+
       final newPlace = PlaceModel(
-        id: '', // Firestore generates this
+        id: '', 
         name: _name,
         category: _category,
-        address: _address,
-        contact: '0780000000', // Placeholder
+        address: _address, // Now populated from the form
+        contact: '078-000-000', 
         description: _description,
-        latitude: _lat,
-        longitude: _lng,
-        createdBy: FirebaseAuth.instance.currentUser!.uid,
+        latitude: -1.9441, 
+        longitude: 30.0619,
+        createdBy: user?.uid ?? '',
         timestamp: DateTime.now(),
       );
 
-      await context.read<ListingsProvider>().addPlace(newPlace);
+      await provider.addPlace(newPlace);
       if (mounted) Navigator.pop(context);
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    // Watch loading state to disable button
+    final isLoading = context.watch<ListingsProvider>().isLoading;
+
     return Scaffold(
-      appBar: AppBar(title: const Text('Add New Place')),
+      appBar: AppBar(title: const Text('Add Kigali Listing')),
       body: Form(
         key: _formKey,
         child: ListView(
           padding: const EdgeInsets.all(16),
           children: [
             TextFormField(
-              decoration: const InputDecoration(labelText: 'Place Name'),
-              validator: (v) => v!.isEmpty ? 'Required' : null,
+              decoration: const InputDecoration(labelText: 'Business Name'),
+              validator: (v) => v!.isEmpty ? 'Enter a name' : null,
               onSaved: (v) => _name = v!,
             ),
+            const SizedBox(height: 12),
             DropdownButtonFormField(
-              initialValue: _category,
-              items: ['Café', 'Pharmacy', 'Hospital', 'Hotel']
+              value: _category,
+              items: ['Café', 'Pharmacy', 'Hospital', 'Hotel', 'Resturant', 'Supermarket']
                   .map((c) => DropdownMenuItem(value: c, child: Text(c)))
                   .toList(),
               onChanged: (v) => setState(() => _category = v.toString()),
             ),
+            const SizedBox(height: 12),
+            // ADDED ADDRESS FIELD
             TextFormField(
-              decoration: const InputDecoration(labelText: 'Address'),
+              decoration: const InputDecoration(labelText: 'Physical Address (e.g., Kimironko Road)'),
+              validator: (v) => v!.isEmpty ? 'Enter an address' : null,
               onSaved: (v) => _address = v!,
             ),
+            const SizedBox(height: 12),
             TextFormField(
               decoration: const InputDecoration(labelText: 'Description'),
               maxLines: 3,
-              onSaved: (v) => _description = v!,
+              onSaved: (v) => _description = v ?? '',
             ),
-            const SizedBox(height: 20),
-            ElevatedButton(onPressed: _save, child: const Text('Save Listing')),
+
+            const SizedBox(height: 24),
+
+            ElevatedButton(
+              onPressed: isLoading ? null : _save,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF0D1B3E),
+                padding: const EdgeInsets.symmetric(vertical: 16),
+              ),
+              child: isLoading 
+                ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2)) 
+                : const Text('Save to Directory', style: TextStyle(color: Colors.white)),
+            ),
           ],
         ),
       ),

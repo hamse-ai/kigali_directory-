@@ -5,6 +5,7 @@ import 'services/auth_service.dart';
 import 'screens/auth_screen.dart'; // <--- MAKE SURE THIS LINE EXISTS
 import 'firebase_options.dart';
 import 'screens/main_navigation.dart';
+import 'providers/listings_provider.dart';
 
 
 void main() async {
@@ -14,10 +15,11 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
+        // Make sure both are here at the top level
         Provider<AuthService>(create: (_) => AuthService()),
+        ChangeNotifierProvider(create: (_) => ListingsProvider()), 
       ],
-      // Changed 'MyApp' to 'KigaliDirectoryApp' to match our logic
-      child: const KigaliDirectoryApp(), 
+      child: const KigaliDirectoryApp(),
     ),
   );
 }
