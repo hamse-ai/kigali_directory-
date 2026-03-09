@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'directory_screen.dart';
 import 'my_listings_screen.dart';
-// import 'map_full_view_screen.dart';
+import 'map_full_view_screen.dart';
 import 'settings_screen.dart';
 
 class MainNavigation extends StatefulWidget {
