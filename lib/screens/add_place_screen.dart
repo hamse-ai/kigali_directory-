@@ -17,8 +17,8 @@ class _AddPlaceScreenState extends State<AddPlaceScreen> {
   String _category = 'Café';
   String _address = '';
   String _description = '';
-  double _lat = -1.9441; // Default Kigali Lat
-  double _lng = 30.0619; // Default Kigali Lng
+  final double _lat = -1.9441; // Default Kigali Lat
+  final double _lng = 30.0619; // Default Kigali Lng
 
   void _save() async {
     if (_formKey.currentState!.validate()) {
@@ -57,7 +57,7 @@ class _AddPlaceScreenState extends State<AddPlaceScreen> {
               onSaved: (v) => _name = v!,
             ),
             DropdownButtonFormField(
-              value: _category,
+              initialValue: _category,
               items: ['Café', 'Pharmacy', 'Hospital', 'Hotel']
                   .map((c) => DropdownMenuItem(value: c, child: Text(c)))
                   .toList(),
