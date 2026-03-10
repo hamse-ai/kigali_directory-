@@ -56,6 +56,9 @@ A significant technical challenge was securing the Google Maps API key while all
     Create a `.env` file in the root directory:
     ```env
     MAPS_API_KEY=your_google_maps_key_here
+    FIREBASE_API_KEY_WEB=your_firebase_key_here
+    FIREBASE_API_KEY_ANDROID=your_firebase_key_here
+    FIREBASE_API_KEY_IOS=your_firebase_key_here
     ```
 
 4.  **Native Android Config:**
@@ -70,7 +73,7 @@ A significant technical challenge was securing the Google Maps API key while all
 
 ## 👨‍💻 Author
 **Hamsee**
-* Software Engineering & Data Science Student.
+* Software Engineering & ML Student.
 * Specializing in Python, Flutter, Go, and "under the hood" implementations.
 
 ---
