@@ -62,7 +62,7 @@ class _AddPlaceScreenState extends State<AddPlaceScreen> {
             ),
             const SizedBox(height: 12),
             DropdownButtonFormField(
-              value: _category,
+              initialValue: _category,
               items: ['Café', 'Pharmacy', 'Hospital', 'Hotel', 'Resturant', 'Supermarket']
                   .map((c) => DropdownMenuItem(value: c, child: Text(c)))
                   .toList(),

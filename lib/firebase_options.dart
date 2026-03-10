@@ -3,6 +3,7 @@
 import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
 import 'package:flutter/foundation.dart'
     show defaultTargetPlatform, kIsWeb, TargetPlatform;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 /// Default [FirebaseOptions] for use with your Firebase apps.
 ///
@@ -40,8 +41,8 @@ class DefaultFirebaseOptions {
     }
   }
 
-  static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyAo2svi1nS61X5eBSYTLPnTN339GmcruV0',
+  static FirebaseOptions get web => FirebaseOptions(
+    apiKey: dotenv.env['FIREBASE_API_KEY_WEB'] ?? '',
     appId: '1:429762482636:web:bf250175ca49e699be4d69',
     messagingSenderId: '429762482636',
     projectId: 'kigali-city-directory-8e51a',
@@ -49,16 +50,16 @@ class DefaultFirebaseOptions {
     storageBucket: 'kigali-city-directory-8e51a.firebasestorage.app',
   );
 
-  static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyDQUIc608SRHnaeebfY3qvRbBP5u1Da-Rk',
+  static FirebaseOptions get android => FirebaseOptions(
+    apiKey: dotenv.env['FIREBASE_API_KEY_ANDROID'] ?? '',
     appId: '1:429762482636:android:ffcff1f2c34bddd9be4d69',
     messagingSenderId: '429762482636',
     projectId: 'kigali-city-directory-8e51a',
     storageBucket: 'kigali-city-directory-8e51a.firebasestorage.app',
   );
 
-  static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyA2R3WWgucRLnW5XvTzTWGieXk_P8uGLR0',
+  static FirebaseOptions get ios => FirebaseOptions(
+    apiKey: dotenv.env['FIREBASE_API_KEY_IOS'] ?? '',
     appId: '1:429762482636:ios:d18a2c74d136a82dbe4d69',
     messagingSenderId: '429762482636',
     projectId: 'kigali-city-directory-8e51a',
@@ -66,8 +67,8 @@ class DefaultFirebaseOptions {
     iosBundleId: 'com.example.kigaliDirectory',
   );
 
-  static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyA2R3WWgucRLnW5XvTzTWGieXk_P8uGLR0',
+  static FirebaseOptions get macos => FirebaseOptions(
+    apiKey: dotenv.env['FIREBASE_API_KEY_IOS'] ?? '',
     appId: '1:429762482636:ios:d18a2c74d136a82dbe4d69',
     messagingSenderId: '429762482636',
     projectId: 'kigali-city-directory-8e51a',
@@ -75,8 +76,8 @@ class DefaultFirebaseOptions {
     iosBundleId: 'com.example.kigaliDirectory',
   );
 
-  static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyAo2svi1nS61X5eBSYTLPnTN339GmcruV0',
+  static FirebaseOptions get windows => FirebaseOptions(
+    apiKey: dotenv.env['FIREBASE_API_KEY_WEB'] ?? '',
     appId: '1:429762482636:web:a6c854e00eeca0c2be4d69',
     messagingSenderId: '429762482636',
     projectId: 'kigali-city-directory-8e51a',

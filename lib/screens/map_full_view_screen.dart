@@ -14,7 +14,7 @@ class MapFullViewScreen extends StatefulWidget {
 class _MapFullViewScreenState extends State<MapFullViewScreen> {
   // Centering the map on Kigali coordinates
   static const LatLng _kigaliCenter = LatLng(-1.9441, 30.0619);
-  late GoogleMapController _mapController;
+
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +54,7 @@ class _MapFullViewScreenState extends State<MapFullViewScreen> {
               target: _kigaliCenter,
               zoom: 13.0,
             ),
-            onMapCreated: (controller) => _mapController = controller,
+
             markers: markers,
             myLocationEnabled: true,
             mapType: MapType.normal,

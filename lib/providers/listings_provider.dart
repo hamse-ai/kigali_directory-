@@ -41,14 +41,13 @@ Future<void> addPlace(PlaceModel place) async {
   try {
     await _service.addPlace(place);
   } catch (e) {
-    print("Error saving: $e");
+    debugPrint("Error saving: $e");
   } finally {
     _isLoading = false;
     notifyListeners(); // This re-enables the button!
   }
 }
 
-  // ADD THIS METHOD TO FIX THE ERROR IN MY_LISTINGS_SCREEN
   Future<void> deletePlace(String id) async {
     await _service.deletePlace(id);
     notifyListeners();
