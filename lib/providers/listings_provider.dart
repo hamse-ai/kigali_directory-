@@ -7,21 +7,39 @@ class ListingsProvider with ChangeNotifier {
   
   
 
+  List<PlaceModel> _allPlaces = [];
   bool _isLoading = false;
   String _searchQuery = "";
-  String _selectedCategory = "All";
+  String _selectedCategory = "All"; // Fix to use correct category name later
+
+  ListingsProvider() {
+    _listenToPlaces();
+  }
+
+  void _listenToPlaces() {
+    _isLoading = true;
+    notifyListeners();
+    
+    _service.getListings().listen((places) {
+      _allPlaces = places;
+      _isLoading = false;
+      notifyListeners();
+    }, onError: (e) {
+      debugPrint("Error loading places: $e");
+      _isLoading = false;
+      notifyListeners();
+    });
+  }
 
   bool get isLoading => _isLoading;
   String get selectedCategory => _selectedCategory;
 
-  Stream<List<PlaceModel>> get filteredListings {
-    return _service.getListings().map((list) {
-      return list.where((place) {
-        final matchesSearch = place.name.toLowerCase().contains(_searchQuery.toLowerCase());
-        final matchesCat = _selectedCategory == "All" || place.category == _selectedCategory;
-        return matchesSearch && matchesCat;
-      }).toList();
-    });
+  List<PlaceModel> get filteredPlaces {
+    return _allPlaces.where((place) {
+      final matchesSearch = place.name.toLowerCase().contains(_searchQuery.toLowerCase());
+      final matchesCat = _selectedCategory == "All" || place.category == _selectedCategory;
+      return matchesSearch && matchesCat;
+    }).toList();
   }
 
   void setSearchQuery(String query) {

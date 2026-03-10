@@ -27,41 +27,35 @@ class _MapFullViewScreenState extends State<MapFullViewScreen> {
         backgroundColor: Colors.white,
         elevation: 0,
       ),
-      body: StreamBuilder<List<PlaceModel>>(
-        stream: listingsProvider.filteredListings,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
+      body: listingsProvider.isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : Builder(builder: (context) {
+              final places = listingsProvider.filteredPlaces;
 
-          final places = snapshot.data ?? [];
+              // Convert PlaceModel data into Map Markers
+              Set<Marker> markers = places.map((place) {
+                return Marker(
+                  markerId: MarkerId(place.id),
+                  position: LatLng(place.latitude, place.longitude),
+                  infoWindow: InfoWindow(
+                    title: place.name,
+                    snippet: '${place.category} - ${place.address}',
+                  ),
+                  icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure),
+                );
+              }).toSet();
 
-          // Convert PlaceModel data into Map Markers
-          Set<Marker> markers = places.map((place) {
-            return Marker(
-              markerId: MarkerId(place.id),
-              position: LatLng(place.latitude, place.longitude),
-              infoWindow: InfoWindow(
-                title: place.name,
-                snippet: '${place.category} - ${place.address}',
-              ),
-              icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure),
-            );
-          }).toSet();
-
-          return GoogleMap(
-            initialCameraPosition: const CameraPosition(
-              target: _kigaliCenter,
-              zoom: 13.0,
-            ),
-
-            markers: markers,
-            myLocationEnabled: true,
-            mapType: MapType.normal,
-            zoomControlsEnabled: false,
-          );
-        },
-      ),
+              return GoogleMap(
+                initialCameraPosition: const CameraPosition(
+                  target: _kigaliCenter,
+                  zoom: 13.0,
+                ),
+                markers: markers,
+                myLocationEnabled: true,
+                mapType: MapType.normal,
+                zoomControlsEnabled: false,
+              );
+            }),
     );
   }
 }

@@ -73,22 +73,16 @@ class DirectoryScreen extends StatelessWidget {
 
           // 3. The Real-time List
           Expanded(
-            child: StreamBuilder<List<PlaceModel>>(
-              stream: listingsProvider.filteredListings,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-                final docs = snapshot.data ?? [];
-                if (docs.isEmpty) return const Center(child: Text('No places found.'));
-
-                return ListView.builder(
-                  padding: const EdgeInsets.all(16),
-                  itemCount: docs.length,
-                  itemBuilder: (context, index) => ServiceCard(place: docs[index]),
-                );
-              },
-            ),
+            child: listingsProvider.isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : listingsProvider.filteredPlaces.isEmpty
+                    ? const Center(child: Text('No places found.'))
+                    : ListView.builder(
+                        padding: const EdgeInsets.all(16),
+                        itemCount: listingsProvider.filteredPlaces.length,
+                        itemBuilder: (context, index) =>
+                            ServiceCard(place: listingsProvider.filteredPlaces[index]),
+                      ),
           ),
         ],
       ),
